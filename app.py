@@ -210,4 +210,43 @@ with st.sidebar:
     show_extra_plots = st.checkbox("Show ROC & PR plots (if possible)", value=True)
 
 st.subheader("1) Upload Test Dataset (CSV)")
+# --- CSV Template download ---
+with st.expander("📥 Download CSV Template (recommended)"):
+    st.write("Use this template to avoid column mismatch. Fill numeric feature values. Optionally include a target column.")
+    include_target = st.checkbox("Include target column in template", value=True)
+
+    template_cols = required_features + ([target_col_guess] if include_target else [])
+    template_df = pd.DataFrame(columns=template_cols)
+
+    st.download_button(
+        label="⬇️ Download Template CSV",
+        data=template_df.to_csv(index=False).encode("utf-8"),
+        file_name="input_template.csv",
+        mime="text/csv",
+    )
+
+uploaded = st.file_uploader("Upload CSV", type=["csv"])
+
+# --- Metrics display ---
+st.subheader("2) Model Evaluation Metrics (from saved results)")
+if metrics_df.empty:
+    st.info("metrics.csv not found in /model. Add it to show evaluation metrics here.")
+else:
+    row = metrics_df[metrics_df["Model"] == selected_model_name]
+    if row.empty:
+        st.warning(f"No row found in metrics.csv for model '{selected_model_name}'. Showing full table.")
+        st.dataframe(metrics_df)
+    else:
+        r = row.iloc[0]
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Accuracy", f"{r['Accuracy']:.4f}")
+        c1.metric("Precision", f"{r['Precision']:.4f}")
+        c2.metric("Recall", f"{r['Recall']:.4f}")
+        c2.metric("F1", f"{r['F1']:.4f}")
+        c3.metric("AUC", f"{r['AUC']:.4f}")
+        c3.metric("MCC", f"{r['MCC']:.4f}")
+
+        with st.expander("Show full metrics table"):
+            st.dataframe(metrics_df)
+
 
