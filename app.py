@@ -179,7 +179,7 @@ def normalize_binary_labels(series: pd.Series, positive_label_hint: str = "1") -
 # -----------------------------
 # UI
 # -----------------------------
-st.title("📌 ML Classification Models - Streamlit App")
+st.title("ML Classification Models - Streamlit App")
 
 required_features = load_feature_columns()
 metrics_df = load_metrics_table()
@@ -211,7 +211,7 @@ with st.sidebar:
 
 st.subheader("1) Upload Test Dataset (CSV)")
 # --- CSV Template download ---
-with st.expander("📥 Download CSV Template (recommended)"):
+with st.expander("Download CSV Template (recommended)"):
     st.write("Use this template to avoid column mismatch. Fill numeric feature values. Optionally include a target column.")
     include_target = st.checkbox("Include target column in template", value=True)
 
@@ -219,7 +219,7 @@ with st.expander("📥 Download CSV Template (recommended)"):
     template_df = pd.DataFrame(columns=template_cols)
 
     st.download_button(
-        label="⬇️ Download Template CSV",
+        label="Download Template CSV",
         data=template_df.to_csv(index=False).encode("utf-8"),
         file_name="input_template.csv",
         mime="text/csv",
@@ -290,7 +290,7 @@ except Exception as e:
     st.error(str(e))
     st.stop()
 
-run = st.button("✅ Run Prediction")
+run = st.button("Run Prediction")
 if not run:
     st.stop()
 
@@ -305,7 +305,7 @@ st.success("Predictions generated!")
 st.dataframe(out.head())
 
 st.download_button(
-    label="⬇️ Download Predictions CSV",
+    label="Download Predictions CSV",
     data=out.to_csv(index=False).encode("utf-8"),
     file_name="predictions.csv",
     mime="text/csv",
